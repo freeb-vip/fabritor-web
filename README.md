@@ -79,6 +79,43 @@ docker-compose down
 
 注意：构建镜像需要本地安装 Docker。构建阶段会使用 yarn，所以会读取仓库中的 `yarn.lock`。
 
+### 使用 Kubernetes 部署
+
+项目提供完整的 Kubernetes 和 Helm Chart 部署方案，支持生产环境高可用部署。
+
+**特性：**
+- ✅ Helm Chart 支持，简化部署和配置管理
+- ✅ 自动扩缩容（HPA）
+- ✅ 健康检查和就绪探针
+- ✅ Ingress 支持（含 SSL/TLS）
+- ✅ Pod 反亲和性和中断预算
+- ✅ 资源限制和请求配置
+
+**快速开始：**
+
+```bash
+# 使用 Helm 部署（推荐）
+helm install fabritor-web ./helm/fabritor-web
+
+# 或使用 kubectl 部署
+kubectl apply -f k8s/
+
+# 查看状态
+kubectl get all
+```
+
+**详细文档：**
+- [Kubernetes 部署指南](./K8S_DEPLOYMENT.md) - 完整的 K8s 部署文档
+- [快速开始示例](./k8s/QUICKSTART.md) - Minikube、Kind 和生产环境示例
+
+支持的环境：
+- Minikube / Kind（本地开发测试）
+- 阿里云 ACK
+- 腾讯云 TKE
+- AWS EKS
+- Google GKE
+- 任何标准 Kubernetes 集群
+
 ### 哪些项目在使用 fabritor
 
 #### 截图美化工具
