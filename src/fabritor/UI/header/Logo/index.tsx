@@ -7,7 +7,7 @@ export default function Logo () {
     <CenterV gap={5} style={{ width: PANEL_WIDTH, paddingLeft: 16 }}>
       <img src={LOGO_ICON} style={{ width: 28 }} />
       <span style={{ fontWeight: 'bold', fontSize: 14 }}>
-        fabritor, A creative editor based on fabricjs.
+        图片快速处理工具
       </span>
     </CenterV>
   )

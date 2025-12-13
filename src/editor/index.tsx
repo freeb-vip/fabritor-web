@@ -80,8 +80,8 @@ export default class Editor {
   }
 
   private _initSketch () {
-    // default size: xiaohongshu
-    const { width = 1242, height = 1660 } = this._template || {};
+    // default size: shopee main image 500x500
+    const { width = 500, height = 500 } = this._template || {};
     const sketch = new fabric.Rect({
       fill: '#ffffff',
       left: 0,
@@ -351,6 +351,27 @@ export default class Editor {
     this.canvas.clipPath = null;
 
     const { left, top, width, height } = this.sketch;
+    
+    // 检查是否需要添加水印
+    // @ts-ignore
+    const watermarkEnabled = this.sketch.watermarkEnabled;
+    // @ts-ignore
+    const watermarkConfig = this.sketch.watermarkConfig;
+    
+    // 先隐藏预览水印组
+    const previewWatermarkGroup = this.canvas.getObjects().find(obj => 
+      // @ts-ignore
+      obj.id === 'watermark-preview-group'
+    );
+    if (previewWatermarkGroup) {
+      previewWatermarkGroup.set('visible', false);
+    }
+    
+    let watermarkObjects = [];
+    if (watermarkEnabled && watermarkConfig) {
+      watermarkObjects = this._addWatermark(watermarkConfig);
+    }
+
     const dataURL = this.canvas.toDataURL({
       // multiplier: 2,
       left,
@@ -361,6 +382,16 @@ export default class Editor {
       ...options
     });
 
+    // 移除水印对象
+    if (watermarkObjects.length > 0) {
+      watermarkObjects.forEach(obj => this.canvas.remove(obj));
+    }
+
+    // 恢复预览水印组的可见性
+    if (previewWatermarkGroup) {
+      previewWatermarkGroup.set('visible', true);
+    }
+
     // @ts-ignore
     this.canvas.setViewportTransform(transform);
     this.canvas.clipPath = clipPath;
@@ -369,6 +400,95 @@ export default class Editor {
       this.canvas.requestRenderAll();
     });
     return dataURL;
+  }
+
+  private _addWatermark(config) {
+    const { text, fontSize, opacity, color, fontFamily, angle, position } = config;
+    const { width, height } = this.sketch;
+    const watermarkObjects = [];
+
+    if (position === 'repeat') {
+      // 重复水印
+      const spacing = fontSize * 3;
+      const cols = Math.ceil(width / spacing) + 1;
+      const rows = Math.ceil(height / spacing) + 1;
+      
+      for (let i = 0; i < rows; i++) {
+        for (let j = 0; j < cols; j++) {
+          const watermark = new fabric.Text(text, {
+            left: j * spacing,
+            top: i * spacing,
+            fontSize: fontSize,
+            fill: color,
+            opacity: opacity,
+            fontFamily: fontFamily,
+            angle: angle,
+            selectable: false,
+            evented: false
+          });
+          this.canvas.add(watermark);
+          watermark.bringToFront();
+          watermarkObjects.push(watermark);
+        }
+      }
+    } else {
+      // 单个水印
+      const watermark = new fabric.Text(text, {
+        fontSize: fontSize,
+        fill: color,
+        opacity: opacity,
+        fontFamily: fontFamily,
+        angle: angle,
+        selectable: false,
+        evented: false
+      });
+
+      // 根据位置设置坐标
+      switch (position) {
+        case 'center':
+          watermark.set({
+            left: width / 2,
+            top: height / 2,
+            originX: 'center',
+            originY: 'center'
+          });
+          break;
+        case 'top-left':
+          watermark.set({
+            left: 50,
+            top: 50
+          });
+          break;
+        case 'top-right':
+          watermark.set({
+            left: width - 50,
+            top: 50,
+            originX: 'right'
+          });
+          break;
+        case 'bottom-left':
+          watermark.set({
+            left: 50,
+            top: height - 50,
+            originY: 'bottom'
+          });
+          break;
+        case 'bottom-right':
+          watermark.set({
+            left: width - 50,
+            top: height - 50,
+            originX: 'right',
+            originY: 'bottom'
+          });
+          break;
+      }
+
+      this.canvas.add(watermark);
+      watermark.bringToFront();
+      watermarkObjects.push(watermark);
+    }
+
+    return watermarkObjects;
   }
 
   public export2Svg () {

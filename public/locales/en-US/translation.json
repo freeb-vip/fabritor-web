@@ -1,6 +1,8 @@
 {
   "common": {
     "ok": "OK",
+    "cancel": "Cancel",
+    "close": "Close",
     "shadow": "Shadow",
     "color": "Color",
     "line_width": "LineWidth",
@@ -20,7 +22,7 @@
     "round": "Round"
   },
   "header": {
-    "fabritor_desc": "My drawing by fabritor",
+    "fabritor_desc": "My Work",
     "export": {
       "jpg": "Export as JPG",
       "png": "Export as PNG",
@@ -30,7 +32,44 @@
       "load": "Load",
       "export": "Export",
       "copy_success": "Copied successfully",
-      "copy_failed": "Copy failed, please choose to export to local"
+      "copy_failed": "Copy failed, please choose to export to local",
+      "save_template": "Save as Template",
+      "my_templates": "My Templates",
+      "canvas_size": "Canvas Size"
+    },
+    "template": {
+      "save_template": "Save as Template",
+      "template_name": "Template Name",
+      "name_required": "Please enter template name",
+      "name_placeholder": "e.g.: Product Poster Template",
+      "description": "Description",
+      "description_placeholder": "Describe the purpose of this template...",
+      "save_success": "Template saved successfully",
+      "save_failed": "Failed to save template",
+      "directory_cancelled": "Directory selection cancelled, template saved to browser database",
+      "manage_templates": "Manage Templates",
+      "no_templates": "No templates saved yet",
+      "load": "Load",
+      "delete": "Delete",
+      "delete_confirm": "Confirm to delete this template?",
+      "delete_success": "Template deleted successfully",
+      "delete_failed": "Failed to delete template",
+      "load_success": "Template loaded successfully",
+      "load_failed": "Failed to load template",
+      "export": "Export All Templates",
+      "import": "Import Templates",
+      "export_success": "Templates exported successfully",
+      "import_success": "Templates imported successfully",
+      "import_failed": "Failed to import templates",
+      "no_preview": "No Preview",
+      "created_at": "Created At",
+      "storage_type": "Storage Type",
+      "filesystem": "File System",
+      "indexeddb": "Browser Database",
+      "localstorage": "Local Storage",
+      "select_directory": "Select Directory",
+      "directory_selected": "Directory selected successfully",
+      "directory_select_failed": "Failed to select directory"
     },
     "toolbar": {
       "undo": "Undo",
@@ -95,7 +134,16 @@
     "sketch": {
       "title": "Canvas",
       "size": "Canvas Size",
-      "fill": "Canvas Background Color"
+      "fill": "Canvas Background Color",
+      "border": "Canvas Border",
+      "border_enabled": "Enable Border",
+      "border_color": "Border Color",
+      "border_width": "Border Width",
+      "border_top": "Top",
+      "border_right": "Right",
+      "border_bottom": "Bottom",
+      "border_left": "Left",
+      "border_text": "Border Text"
     },
     "text": {
       "font_family": "Font",
@@ -150,5 +198,19 @@
       "layer_down": "Move Down",
       "layer_bottom": "Move to Bottom"
     }
+  },
+  "canvas_size": {
+    "title": "Canvas Size Selection",
+    "width": "Width",
+    "height": "Height",
+    "width_required": "Please enter width",
+    "height_required": "Please enter height",
+    "width_invalid": "Please enter a valid width",
+    "height_invalid": "Please enter a valid height",
+    "width_placeholder": "Enter width",
+    "height_placeholder": "Enter height",
+    "custom": "Custom Size",
+    "apply": "Apply",
+    "apply_success": "Applied {{name}} ({{width}} × {{height}}px)"
   }
 }

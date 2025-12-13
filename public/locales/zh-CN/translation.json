@@ -1,6 +1,8 @@
 {
   "common": {
     "ok": "确认",
+    "cancel": "取消",
+    "close": "关闭",
     "shadow": "阴影",
     "color": "颜色",
     "line_width": "线宽",
@@ -20,7 +22,7 @@
     "round": "圆角"
   },
   "header": {
-    "fabritor_desc": "我的画板 by fabritor",
+    "fabritor_desc": "我的作品",
     "export": {
       "jpg": "导出为 JPG",
       "png": "导出为 PNG",
@@ -30,7 +32,44 @@
       "load": "加载模板",
       "export": "导出",
       "copy_success": "复制成功",
-      "copy_failed": "复制失败，请选择导出到本地"
+      "copy_failed": "复制失败,请选择导出到本地",
+      "save_template": "保存为模板",
+      "my_templates": "我的模板",
+      "canvas_size": "画布规格"
+    },
+    "template": {
+      "save_template": "保存为模板",
+      "template_name": "模板名称",
+      "name_required": "请输入模板名称",
+      "name_placeholder": "例如：商品海报模板",
+      "description": "模板描述",
+      "description_placeholder": "描述一下这个模板的用途...",
+      "save_success": "模板保存成功",
+      "save_failed": "模板保存失败",
+      "directory_cancelled": "已取消选择目录，模板已保存到浏览器数据库",
+      "manage_templates": "管理模板",
+      "no_templates": "还没有保存任何模板",
+      "load": "加载",
+      "delete": "删除",
+      "delete_confirm": "确认删除此模板？",
+      "delete_success": "模板删除成功",
+      "delete_failed": "模板删除失败",
+      "load_success": "模板加载成功",
+      "load_failed": "模板加载失败",
+      "export": "导出所有模板",
+      "import": "导入模板",
+      "export_success": "模板导出成功",
+      "import_success": "模板导入成功",
+      "import_failed": "模板导入失败",
+      "no_preview": "无预览",
+      "created_at": "创建时间",
+      "storage_type": "存储方式",
+      "filesystem": "文件系统",
+      "indexeddb": "浏览器数据库",
+      "localstorage": "本地存储",
+      "select_directory": "选择保存目录",
+      "directory_selected": "目录选择成功",
+      "directory_select_failed": "目录选择失败"
     },
     "toolbar": {
       "undo": "撤销",
@@ -75,6 +114,9 @@
       "pencil": "铅笔",
       "marker_pen": "马克笔"
     },
+    "watermark": {
+      "title": "水印"
+    },
     "app": {
       "title": "应用",
       "qrcode": "二维码",
@@ -95,7 +137,32 @@
     "sketch": {
       "title": "画布",
       "size": "画布尺寸",
-      "fill": "画布背景色"
+      "fill": "画布背景色",
+      "border": "画布边框",
+      "border_enabled": "启用边框",
+      "border_color": "边框颜色",
+      "border_width": "边框宽度",
+      "border_top": "上边框",
+      "border_right": "右边框",
+      "border_bottom": "下边框",
+      "border_left": "左边框",
+      "border_text": "边框文字",
+      "watermark": "水印设置",
+      "watermark_enabled": "启用水印",
+      "watermark_text": "水印文字",
+      "watermark_text_placeholder": "请输入水印文字",
+      "watermark_opacity": "透明度",
+      "watermark_size": "字体大小",
+      "watermark_color": "水印颜色",
+      "watermark_font": "字体",
+      "watermark_angle": "旋转角度",
+      "watermark_position": "水印位置",
+      "watermark_position_center": "居中",
+      "watermark_position_topleft": "左上",
+      "watermark_position_topright": "右上",
+      "watermark_position_bottomleft": "左下",
+      "watermark_position_bottomright": "右下",
+      "watermark_position_repeat": "平铺"
     },
     "text": {
       "font_family": "字体",
@@ -150,5 +217,19 @@
       "layer_down": "下移",
       "layer_bottom": "置底"
     }
+  },
+  "canvas_size": {
+    "title": "画布规格选择",
+    "width": "宽度",
+    "height": "高度",
+    "width_required": "请输入宽度",
+    "height_required": "请输入高度",
+    "width_invalid": "请输入有效的宽度",
+    "height_invalid": "请输入有效的高度",
+    "width_placeholder": "输入宽度",
+    "height_placeholder": "输入高度",
+    "custom": "自定义尺寸",
+    "apply": "应用",
+    "apply_success": "已应用 {{name}} ({{width}} × {{height}}px)"
   }
 }

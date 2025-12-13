@@ -1,7 +1,7 @@
 {
   "name": "fabritor-web",
   "version": "3.0.1",
-  "description": "fabritor-web",
+  "description": "图片快速处理工具 - 基于 Fabric.js 的图片编辑处理工具",
   "dependencies": {
     "@ant-design/icons": "^5.2.6",
     "@emoji-mart/data": "^1.1.2",

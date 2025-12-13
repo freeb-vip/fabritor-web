@@ -11,9 +11,9 @@ import 'dayjs/locale/zh-cn';
 
 export default function Layout() {
   const [searchParams] = useSearchParams();
-  const lng = searchParams.get('lng') || 'en-US';
+  const lng = searchParams.get('lng') || 'zh-CN';
   const { i18n } = useTranslation();
-  const [antDLocale, setAntDLocale] = useState<Locale>(enUS);
+  const [antDLocale, setAntDLocale] = useState<Locale>(zhCN);
 
   useEffect(() => {
     if (lng === 'en-US') {

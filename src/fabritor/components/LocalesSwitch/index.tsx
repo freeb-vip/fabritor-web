@@ -3,7 +3,7 @@ import { useSearchParams } from 'ice';
 
 export default function LocalesSwitch () {
   const [searchParams] = useSearchParams();
-  const lng = searchParams.get('lng') || 'en-US';
+  const lng = searchParams.get('lng') || 'zh-CN';
 
   const switchLocale = () => {
     window.location.replace(`/?lng=${lng === 'en-US' ? 'zh-CN' : 'en-US'}`);

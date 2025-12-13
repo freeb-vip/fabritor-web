@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    image: fabritor-web:latest
+    ports:
+      - "3000:80"
+    environment:
+      - NODE_ENV=production
+    restart: unless-stopped
+
+  # Optional dev service (uncomment to use)
+  # dev:
+  #   image: node:18
+  #   working_dir: /app
+  #   volumes:
+  #     - ./:/app
+  #     - /app/node_modules
+  #   command: ["yarn", "start"]
+  #   ports:
+  #     - "8000:8000"
+  #   environment:
+  #     - NODE_ENV=development
+  #   stdin_open: true
+  #   tty: true

@@ -1,8 +1,8 @@
 <p align="center"><img alt="logo" src="/public/logo.svg"></p>
 
 <p align="center">
-  <strong>👻 fabritor, A creative editor based on fabricjs</strong><br/>
-  <strong>😘 快速构建属于自己的图片编辑器</strong>
+  <strong>👻 图片快速处理工具</strong><br/>
+  <strong>😘 基于 Fabric.js 的图片编辑处理工具，支持多种尺寸预设、图层管理和模板保存</strong>
 </p>
 
 <p align="center"><img alt="banner" src="/public/fabritor_2024_1.png"></p>
@@ -37,6 +37,8 @@
 
 **🛠 导出** 导出到剪贴板，导出 JPG、PNG、SVG 和模板（JSON），基于 JSON 可以构建模板库。
 
+**📦 模板管理** 将设计保存为模板并存储在本地；支持模板预览、加载、删除；支持导出/导入模板文件。[详细说明](./TEMPLATE_GUIDE.md)
+
 **安全可靠** 纯浏览器端操作；操作自动保存到本地，数据不丢失。
 
 **多语言支持** 支持中英文切换
@@ -50,6 +52,32 @@ yarn start
 ```
 
 访问: http://localhost:3000
+
+### 使用 Docker 运行
+
+项目已提供 Docker 配置，可以在容器中构建并用 nginx 提供静态文件。
+
+构建并运行（使用 Docker）：
+
+```bash
+# 在项目根目录下构建镜像
+docker build -t fabritor-web .
+
+# 运行镜像并把容器 80 端口映射到宿主机 3000
+docker run -d --rm -p 3000:80 --name fabritor-web fabritor-web
+
+# 之后在浏览器打开 http://localhost:3000
+```
+
+或者使用 docker-compose（会自动构建并启动）：
+
+```bash
+docker-compose up --build -d
+# 停止并移除容器：
+docker-compose down
+```
+
+注意：构建镜像需要本地安装 Docker。构建阶段会使用 yarn，所以会读取仓库中的 `yarn.lock`。
 
 ### 哪些项目在使用 fabritor
 
