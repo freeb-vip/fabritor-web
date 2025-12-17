@@ -1,6 +1,6 @@
 import { Layout, Tabs, Flex, FloatButton } from 'antd';
 import { useContext } from 'react';
-import { AlertOutlined, FileTextOutlined, PictureOutlined, BorderOutlined, BulbOutlined, AppstoreOutlined, GithubFilled, FontColorsOutlined } from '@ant-design/icons';
+import { AlertOutlined, FileTextOutlined, PictureOutlined, BorderOutlined, BulbOutlined, AppstoreOutlined, FontColorsOutlined } from '@ant-design/icons';
 import TextPanel from './TextPanel';
 import ImagePanel from './ImagePanel';
 import ShapePanel from './ShapePanel';
@@ -132,11 +132,6 @@ export default function Panel () {
         }
       />
       <FloatButton.Group shape="circle" style={{ left: 10, bottom: 14, right: 'auto' }}>
-        <FloatButton
-          icon={<GithubFilled />}
-          href="https://github.com/sleepy-zone/fabritor-web"
-          target="_blank"
-        />
         <LocalesSwitch />
       </FloatButton.Group>
     </Sider>

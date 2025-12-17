@@ -1,14 +1,109 @@
-import { Popover } from 'antd';
+import { Popover, Button, Tooltip, Space, message } from 'antd';
 import { ColorsPicker, Color } from 'react-colors-beauty';
+import { BgColorsOutlined } from '@ant-design/icons';
+import { useTranslation } from '@/i18n/utils';
+import { useContext, useState } from 'react';
+import { GlobalStateContext } from '@/context';
 
 // @TODO preset size
 export default function ColorSetter (props) {
   const { defaultColor = '#ffffff', trigger, type, value, onChange } = props;
+  const { t } = useTranslation();
+  const { editor } = useContext(GlobalStateContext);
+  const [popoverOpen, setPopoverOpen] = useState(false);
 
   const handleChange = (v) => {
     if (!v) return;
     if (!v.color) v.color = defaultColor;
     onChange?.(v);
+  }
+
+  // 取色笔功能 - 从画布取色
+  const handleEyeDropper = async () => {
+    // 优先尝试使用原生 EyeDropper API
+    if (typeof window !== 'undefined' && 'EyeDropper' in window) {
+      try {
+        // @ts-ignore
+        const eyeDropper = new window.EyeDropper();
+        const result = await eyeDropper.open();
+        const color = result.sRGBHex;
+        
+        onChange?.({
+          type: 'solid',
+          color: color
+        });
+        message.success(`已选取颜色: ${color}`);
+        return;
+      } catch (e) {
+        // 用户取消了取色操作
+        console.log('取色已取消');
+        return;
+      }
+    }
+
+    // 如果不支持 EyeDropper API，使用画布取色方案
+    if (!editor?.canvas) {
+      message.warning(t('common.eyedropper_not_supported'));
+      return;
+    }
+
+    // 关闭颜色选择弹窗
+    setPopoverOpen(false);
+    
+    message.info('请点击画布上的任意位置取色');
+    
+    const canvas = editor.canvas;
+    const originalCursor = canvas.defaultCursor;
+    const originalHoverCursor = canvas.hoverCursor;
+    canvas.defaultCursor = 'crosshair';
+    canvas.hoverCursor = 'crosshair';
+    
+    const handleCanvasClick = (e: any) => {
+      try {
+        // 获取画布的底层 canvas 元素
+        const canvasEl = canvas.lowerCanvasEl || canvas.getElement();
+        const ctx = canvasEl.getContext('2d');
+        
+        if (!ctx) {
+          message.error('无法获取画布上下文');
+          return;
+        }
+        
+        // 获取鼠标在画布上的实际像素位置
+        const rect = canvasEl.getBoundingClientRect();
+        const scaleX = canvasEl.width / rect.width;
+        const scaleY = canvasEl.height / rect.height;
+        
+        const x = Math.floor((e.e.clientX - rect.left) * scaleX);
+        const y = Math.floor((e.e.clientY - rect.top) * scaleY);
+        
+        // 获取点击位置的像素颜色
+        const imageData = ctx.getImageData(x, y, 1, 1);
+        const [r, g, b, a] = imageData.data;
+        
+        // 转换为十六进制颜色
+        const hex = '#' + [r, g, b].map(v => v.toString(16).padStart(2, '0')).join('');
+        
+        console.log('取色结果:', { x, y, r, g, b, hex });
+        
+        onChange?.({
+          type: 'solid',
+          color: hex
+        });
+        
+        message.success(`已选取颜色: ${hex}`);
+      } catch (err) {
+        console.error('取色失败:', err);
+        message.error('取色失败');
+      } finally {
+        // 恢复原来的光标
+        canvas.defaultCursor = originalCursor;
+        canvas.hoverCursor = originalHoverCursor;
+        canvas.off('mouse:down', handleCanvasClick);
+      }
+    };
+    
+    canvas.once('mouse:down', handleCanvasClick);
   }
 
   const calcIconFill = () => {
@@ -65,6 +160,8 @@ export default function ColorSetter (props) {
   return (
     <>
       <Popover
+        open={popoverOpen}
+        onOpenChange={setPopoverOpen}
         content={
           <div className="fabritor-color-setter">
             <ColorsPicker
@@ -73,6 +170,18 @@ export default function ColorSetter (props) {
               format="hex"
               angleType="rotate"
             />
+            <div style={{ marginTop: 8, borderTop: '1px solid #eee', paddingTop: 8 }}>
+              <Tooltip title={t('common.eyedropper')}>
+                <Button 
+                  icon={<BgColorsOutlined />} 
+                  onClick={handleEyeDropper}
+                  size="small"
+                  block
+                >
+                  {t('common.eyedropper')}
+                </Button>
+              </Tooltip>
+            </div>
           </div>
         }
         trigger="click"

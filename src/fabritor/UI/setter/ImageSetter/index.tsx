@@ -1,7 +1,7 @@
 import { fabric } from 'fabric';
 import { useContext, useEffect, useState } from 'react';
-import { Col, Form, Row } from 'antd';
-import { FunctionOutlined, RightOutlined } from '@ant-design/icons';
+import { Button, Col, Form, Row, Tooltip } from 'antd';
+import { ExpandOutlined, FunctionOutlined, RightOutlined } from '@ant-design/icons';
 import ReplaceSetter from './ReplaceSetter';
 import { GlobalStateContext } from '@/context';
 import BorderSetter from './BorderSetter';
@@ -28,6 +28,43 @@ export default function ImageSetter () {
       onClick: () => { setOpenFx(true) }
     }
   ];
+
+  // 图片自适应画布，覆盖整个画布并保持右下角对齐
+  const handleFitToCanvas = () => {
+    if (!object || !editor) return;
+    
+    const { sketch } = editor;
+    const canvasWidth = sketch.width;
+    const canvasHeight = sketch.height;
+    
+    // 获取图片原始尺寸
+    const imgWidth = object.width * object.scaleX;
+    const imgHeight = object.height * object.scaleY;
+    
+    // 计算缩放比例，使图片完全覆盖画布（cover模式）
+    const scaleX = canvasWidth / object.width;
+    const scaleY = canvasHeight / object.height;
+    const scale = Math.max(scaleX, scaleY);
+    
+    // 设置缩放
+    object.set({
+      scaleX: scale,
+      scaleY: scale
+    });
+    
+    // 计算新的图片尺寸
+    const newWidth = object.width * scale;
+    const newHeight = object.height * scale;
+    
+    // 右下角对齐：left = canvasWidth - newWidth, top = canvasHeight - newHeight
+    object.set({
+      left: canvasWidth - newWidth,
+      top: canvasHeight - newHeight
+    });
+    
+    editor.canvas.requestRenderAll();
+    editor.fireCustomModifiedEvent();
+  }
 
   const handleImageReplace = (base64) => {
     if (base64) {
@@ -104,6 +141,17 @@ export default function ImageSetter () {
           </FormItem>
         </Col>
       </Row>
+      <FormItem>
+        <Tooltip title="自动缩放图片覆盖画布，保持右下角对齐">
+          <Button 
+            icon={<ExpandOutlined />}
+            onClick={handleFitToCanvas}
+            block
+          >
+            {t('setter.image.fit_canvas')}
+          </Button>
+        </Tooltip>
+      </FormItem>
     </Form>
     <FList 
       dataSource={IMAGE_ADVANCE_CONFIG}

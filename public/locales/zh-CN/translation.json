@@ -19,7 +19,9 @@
     "blur": "模糊",
     "border": "边框",
     "style": "样式",
-    "round": "圆角"
+    "round": "圆角",
+    "eyedropper": "取色笔",
+    "eyedropper_not_supported": "您的浏览器不支持取色笔功能"
   },
   "header": {
     "fabritor_desc": "我的作品",
@@ -121,6 +123,7 @@
       "title": "应用",
       "qrcode": "二维码",
       "emoji": "Emoji",
+      "sticker": "贴图",
       "error_level": "纠错等级",
       "image": "内置图片",
       "image_size": "内置图片大小",
@@ -172,6 +175,7 @@
       "font_styles": "样式",
       "char_spacing": "字间距",
       "line_height": "行间距",
+      "text_background": "文字背景色",
       "fx": {
         "title": "特效",
         "fill_image": "图片填充",
@@ -181,7 +185,8 @@
     "image": {
       "filter": "滤镜",
       "replace": "替换图片",
-      "crop": "裁剪"
+      "crop": "裁剪",
+      "fit_canvas": "适应画布"
     },
     "group": {
       "title": "组合",

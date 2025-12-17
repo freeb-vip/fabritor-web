@@ -72,9 +72,9 @@ docker run -d --rm -p 3000:80 --name fabritor-web fabritor-web
 或者使用 docker-compose（会自动构建并启动）：
 
 ```bash
-docker-compose up --build -d
+docker compose build && docker compose up -d
 # 停止并移除容器：
-docker-compose down
+docker compose down
 ```
 
 注意：构建镜像需要本地安装 Docker。构建阶段会使用 yarn，所以会读取仓库中的 `yarn.lock`。

@@ -19,7 +19,9 @@
     "blur": "Blur",
     "border": "Border",
     "style": "Style",
-    "round": "Round"
+    "round": "Round",
+    "eyedropper": "Eyedropper",
+    "eyedropper_not_supported": "Your browser does not support the eyedropper feature"
   },
   "header": {
     "fabritor_desc": "My Work",
@@ -118,6 +120,7 @@
       "title": "App",
       "qrcode": "QRCode",
       "emoji": "Emoji",
+      "sticker": "Sticker",
       "error_level": "Error Level",
       "image": "Image",
       "image_size": "Image Size",
@@ -153,6 +156,7 @@
       "font_styles": "Style",
       "char_spacing": "Char Space",
       "line_height": "Line Height",
+      "text_background": "Text Background",
       "fx": {
         "title": "Effects",
         "fill_image": "Fill Image",
@@ -162,7 +166,8 @@
     "image": {
       "filter": "Filter",
       "replace": "Replace Image",
-      "crop": "Crop"
+      "crop": "Crop",
+      "fit_canvas": "Fit to Canvas"
     },
     "group": {
       "title": "Group",

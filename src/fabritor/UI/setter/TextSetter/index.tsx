@@ -76,6 +76,15 @@ export default function TextSetter () {
         }
       } else if (key === 'fill') {
         handleFill(values[key]);
+      } else if (key === 'textBackgroundColor') {
+        // 处理文字背景颜色
+        let bgColor = '';
+        if (typeof values[key] === 'string') {
+          bgColor = values[key];
+        } else if (values[key]?.color) {
+          bgColor = values[key].color;
+        }
+        object.set('textBackgroundColor', bgColor);
       } else {
         const selectedText = object.getSelectedText();
         if (selectedText && key === 'fill') {
@@ -102,6 +111,7 @@ export default function TextSetter () {
       textAlign: object.textAlign,
       lineHeight: object.lineHeight,
       charSpacing: object.charSpacing,
+      textBackgroundColor: object.textBackgroundColor ? { type: 'solid', color: object.textBackgroundColor } : { type: 'solid', color: 'transparent' },
       fontStyles: {
         bold: object.fontWeight === 'bold',
         italic: object.fontStyle === 'italic',
@@ -149,6 +159,12 @@ export default function TextSetter () {
           label={t('setter.text.font_styles')}
         >
           <FontStyleSetter />
+        </FormItem>
+        <FormItem
+          name="textBackgroundColor"
+          label={t('setter.text.text_background')}
+        >
+          <ColorSetter type="backgroundColor" defaultColor="transparent" />
         </FormItem>
         <FormItem
           name="charSpacing"
