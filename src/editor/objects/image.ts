@@ -76,7 +76,7 @@ export const createFImage = async (options) => {
     img = await loadImage(imageSource);
   } catch(e) { console.log(e); }
   
-  if (!img) return;
+  if (!img) return null;
 
   const fimg = new fabric.FImage({
     image: img,
@@ -87,4 +87,6 @@ export const createFImage = async (options) => {
   canvas.add(fimg);
   canvas.setActiveObject(fimg);
   canvas.requestRenderAll();
+  
+  return fimg;
 }

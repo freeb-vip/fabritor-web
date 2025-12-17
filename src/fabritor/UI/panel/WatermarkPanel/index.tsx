@@ -26,8 +26,6 @@ export default function WatermarkPanel() {
   useEffect(() => {
     if (!editor) return;
     const { sketch } = editor;
-    
-    // 加载水印配置
     // @ts-ignore
     if (sketch.watermarkConfig) {
       // @ts-ignore
@@ -40,17 +38,11 @@ export default function WatermarkPanel() {
     }
   }, [editor]);
 
-  // 渲染水印预览
   const renderWatermarkPreview = () => {
     if (!editor) return;
-    
     const { canvas, sketch } = editor;
     
-    // 先移除旧的水印组
-    const existingGroup = canvas.getObjects().find(obj => 
-      // @ts-ignore
-      obj.id === WATERMARK_GROUP_ID
-    );
+    const existingGroup = canvas.getObjects().find((obj: fabric.Object) => (obj as any).id === WATERMARK_GROUP_ID);
     if (existingGroup) {
       canvas.remove(existingGroup);
     }
@@ -61,10 +53,9 @@ export default function WatermarkPanel() {
     }
 
     const { width, height } = sketch;
-    const watermarkObjects = [];
+    const watermarkObjects: fabric.Text[] = [];
 
     if (watermarkConfig.position === 'repeat') {
-      // 重复水印
       const spacing = watermarkConfig.fontSize * 3;
       const cols = Math.ceil(width / spacing) + 1;
       const rows = Math.ceil(height / spacing) + 1;
@@ -86,7 +77,6 @@ export default function WatermarkPanel() {
         }
       }
     } else {
-      // 单个水印
       const watermark = new fabric.Text(watermarkConfig.text, {
         fontSize: watermarkConfig.fontSize,
         fill: watermarkConfig.color,
@@ -97,60 +87,34 @@ export default function WatermarkPanel() {
         evented: false
       });
 
-      // 根据位置设置坐标
       switch (watermarkConfig.position) {
         case 'center':
-          watermark.set({
-            left: width / 2,
-            top: height / 2,
-            originX: 'center',
-            originY: 'center'
-          });
+          watermark.set({ left: width / 2, top: height / 2, originX: 'center', originY: 'center' });
           break;
         case 'top-left':
-          watermark.set({
-            left: 50,
-            top: 50
-          });
+          watermark.set({ left: 50, top: 50 });
           break;
         case 'top-right':
-          watermark.set({
-            left: width - 50,
-            top: 50,
-            originX: 'right'
-          });
+          watermark.set({ left: width - 50, top: 50, originX: 'right' });
           break;
         case 'bottom-left':
-          watermark.set({
-            left: 50,
-            top: height - 50,
-            originY: 'bottom'
-          });
+          watermark.set({ left: 50, top: height - 50, originY: 'bottom' });
           break;
         case 'bottom-right':
-          watermark.set({
-            left: width - 50,
-            top: height - 50,
-            originX: 'right',
-            originY: 'bottom'
-          });
+          watermark.set({ left: width - 50, top: height - 50, originX: 'right', originY: 'bottom' });
           break;
       }
-
       watermarkObjects.push(watermark);
     }
 
-    // 创建水印组
     if (watermarkObjects.length > 0) {
       const group = new fabric.Group(watermarkObjects, {
         selectable: false,
         evented: false,
-        // @ts-ignore
-        id: WATERMARK_GROUP_ID
       });
-      
+      (group as any).id = WATERMARK_GROUP_ID;
       canvas.add(group);
-      group.moveTo(canvas.getObjects().length - 1); // 移到最上层
+      group.moveTo(canvas.getObjects().length - 1);
       canvas.requestRenderAll();
     }
   };
@@ -162,16 +126,11 @@ export default function WatermarkPanel() {
     sketch.watermarkConfig = watermarkConfig;
     // @ts-ignore
     sketch.watermarkEnabled = watermarkEnabled;
-    
-    // 渲染水印预览
     renderWatermarkPreview();
   }, [watermarkConfig, watermarkEnabled, editor]);
 
-  const handleWatermarkChange = (field: string, value: any) => {
-    setWatermarkConfig(prev => ({
-      ...prev,
-      [field]: value
-    }));
+  const handleWatermarkChange = (field: string, value: string | number) => {
+    setWatermarkConfig(prev => ({ ...prev, [field]: value }));
   };
 
   const handleEnabledChange = (checked: boolean) => {
@@ -179,12 +138,9 @@ export default function WatermarkPanel() {
   };
 
   return (
-    <div style={{ padding: '16px' }}>
+    <div style={{ padding: '16px 16px 16px 0' }}>
       <FormItem label={<Trans i18nKey="setter.sketch.watermark_enabled" />}>
-        <Switch 
-          checked={watermarkEnabled} 
-          onChange={handleEnabledChange} 
-        />
+        <Switch checked={watermarkEnabled} onChange={handleEnabledChange} />
       </FormItem>
 
       {watermarkEnabled && (
@@ -200,75 +156,46 @@ export default function WatermarkPanel() {
           </FormItem>
 
           <FormItem label={<Trans i18nKey="setter.sketch.watermark_opacity" />}>
-            <Slider 
-              min={0}
-              max={1}
-              step={0.01}
-              value={watermarkConfig.opacity}
+            <Slider min={0} max={1} step={0.01} value={watermarkConfig.opacity}
               onChange={(val) => handleWatermarkChange('opacity', val)}
-              marks={{
-                0: '0%',
-                0.5: '50%',
-                1: '100%'
-              }}
+              marks={{ 0: '0%', 0.5: '50%', 1: '100%' }}
             />
           </FormItem>
 
           <FormItem label={<Trans i18nKey="setter.sketch.watermark_size" />}>
-            <Slider 
-              min={12}
-              max={200}
-              value={watermarkConfig.fontSize}
+            <Slider min={12} max={200} value={watermarkConfig.fontSize}
               onChange={(val) => handleWatermarkChange('fontSize', val)}
             />
           </FormItem>
 
           <FormItem label={<Trans i18nKey="setter.sketch.watermark_color" />}>
-            <Input 
-              type="color"
-              value={watermarkConfig.color}
+            <Input type="color" value={watermarkConfig.color}
               onChange={(e) => handleWatermarkChange('color', e.target.value)}
               style={{ width: 100 }}
             />
           </FormItem>
 
           <FormItem label={<Trans i18nKey="setter.sketch.watermark_font" />}>
-            <Select 
-              value={watermarkConfig.fontFamily}
-              onChange={(val) => handleWatermarkChange('fontFamily', val)}
-            >
+            <Select value={watermarkConfig.fontFamily}
+              onChange={(val) => handleWatermarkChange('fontFamily', val)}>
               <Option value="Arial">Arial</Option>
               <Option value="Times New Roman">Times New Roman</Option>
               <Option value="Courier New">Courier New</Option>
               <Option value="Georgia">Georgia</Option>
               <Option value="Verdana">Verdana</Option>
-              <Option value="微软雅黑">微软雅黑</Option>
-              <Option value="宋体">宋体</Option>
-              <Option value="黑体">黑体</Option>
             </Select>
           </FormItem>
 
           <FormItem label={<Trans i18nKey="setter.sketch.watermark_angle" />}>
-            <Slider 
-              min={-90}
-              max={90}
-              value={watermarkConfig.angle}
+            <Slider min={-90} max={90} value={watermarkConfig.angle}
               onChange={(val) => handleWatermarkChange('angle', val)}
-              marks={{
-                '-90': '-90°',
-                '-45': '-45°',
-                0: '0°',
-                45: '45°',
-                90: '90°'
-              }}
+              marks={{ '-90': '-90°', '-45': '-45°', 0: '0°', 45: '45°', 90: '90°' }}
             />
           </FormItem>
 
           <FormItem label={<Trans i18nKey="setter.sketch.watermark_position" />}>
-            <Select 
-              value={watermarkConfig.position}
-              onChange={(val) => handleWatermarkChange('position', val)}
-            >
+            <Select value={watermarkConfig.position}
+              onChange={(val) => handleWatermarkChange('position', val)}>
               <Option value="center">{t('setter.sketch.watermark_position_center')}</Option>
               <Option value="top-left">{t('setter.sketch.watermark_position_topleft')}</Option>
               <Option value="top-right">{t('setter.sketch.watermark_position_topright')}</Option>

@@ -1,12 +1,13 @@
 import { Layout, Tabs, Flex, FloatButton } from 'antd';
 import { useContext } from 'react';
-import { AlertOutlined, FileTextOutlined, PictureOutlined, BorderOutlined, BulbOutlined, AppstoreOutlined, FontColorsOutlined } from '@ant-design/icons';
+import { AlertOutlined, FileTextOutlined, PictureOutlined, BorderOutlined, BulbOutlined, AppstoreOutlined, FontColorsOutlined, TagsOutlined } from '@ant-design/icons';
 import TextPanel from './TextPanel';
 import ImagePanel from './ImagePanel';
 import ShapePanel from './ShapePanel';
 import PaintPanel from './PaintPanel';
 import DesignPanel from './DesignPanel';
 import WatermarkPanel from './WatermarkPanel';
+import StickerPanel from './StickerPanel';
 import { GlobalStateContext } from '@/context';
 import AppPanel from './AppPanel';
 import { PANEL_WIDTH } from '@/config';
@@ -52,6 +53,11 @@ const OBJECT_TYPES = [
     icon: <BulbOutlined style={iconStyle} />
   },
   {
+    label: <Trans i18nKey="panel.sticker.title" />,
+    value: 'sticker',
+    icon: <TagsOutlined style={iconStyle} />
+  },
+  {
     label: <Trans i18nKey="panel.watermark.title" />,
     value: 'watermark',
     icon: <FontColorsOutlined style={iconStyle} />
@@ -81,6 +87,9 @@ export default function Panel () {
     }
     if (value === 'paint') {
       return <PaintPanel />;
+    }
+    if (value === 'sticker') {
+      return <StickerPanel />;
     }
     if (value === 'watermark') {
       return <WatermarkPanel />;

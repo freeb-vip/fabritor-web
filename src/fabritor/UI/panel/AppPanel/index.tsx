@@ -1,9 +1,8 @@
 import { Flex, Card } from 'antd';
-import { QrcodeOutlined, SmileOutlined, PictureOutlined } from '@ant-design/icons';
+import { QrcodeOutlined, SmileOutlined } from '@ant-design/icons';
 import { useState } from 'react';
 import QRCodePanel from './QRCode';
 import EmojiPanel from './Emoji';
-import StickerPanel from './StickerPanel';
 import { Trans } from '@/i18n/utils';
 
 const APP_LIST = [
@@ -16,11 +15,6 @@ const APP_LIST = [
     title: <Trans i18nKey="panel.app.emoji" />,
     key: 'emoji',
     icon: <SmileOutlined style={{ fontSize: 30 }} />
-  },
-  {
-    title: <Trans i18nKey="panel.app.sticker" />,
-    key: 'sticker',
-    icon: <PictureOutlined style={{ fontSize: 30 }} />
   }
 ];
 
@@ -65,9 +59,6 @@ export default function AppPanel () {
     }
     if (app === 'emoji') {
       return <EmojiPanel back={back2List} />
-    }
-    if (app === 'sticker') {
-      return <StickerPanel back={back2List} />
     }
     return null;
   }

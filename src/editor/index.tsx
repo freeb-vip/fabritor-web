@@ -80,8 +80,8 @@ export default class Editor {
   }
 
   private _initSketch () {
-    // default size: shopee main image 500x500
-    const { width = 500, height = 500 } = this._template || {};
+    // default size: shopee main image 800x800
+    const { width = 800, height = 800 } = this._template || {};
     const sketch = new fabric.Rect({
       fill: '#ffffff',
       left: 0,

@@ -22,7 +22,21 @@ i18n
   .init({
     fallbackLng: 'en-US',
     debug: true,
-
+    supportedLngs: ['en-US', 'zh-CN'],
+    load: 'currentOnly',
+    detection: {
+      convertDetectedLanguage: (lng) => {
+        // 将 zh, zh-CN, zh-TW 等都映射到 zh-CN
+        if (lng.startsWith('zh')) {
+          return 'zh-CN';
+        }
+        // 将 en, en-US, en-GB 等都映射到 en-US
+        if (lng.startsWith('en')) {
+          return 'en-US';
+        }
+        return lng;
+      }
+    },
     interpolation: {
       escapeValue: false, // not needed for react as it escapes by default
     }
