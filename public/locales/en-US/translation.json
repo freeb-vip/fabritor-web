@@ -95,7 +95,8 @@
       "add_subtitle": "Subtitle",
       "add_body_text": "a body of text",
       "add_text_border": "Text border",
-      "presets": "Presets"
+      "presets": "Presets",
+      "ecommerce_presets": "E-commerce"
     },
     "image": {
       "title": "Image",
@@ -115,6 +116,19 @@
       "start": "Start Drawing",
       "pencil": "Pencil",
       "marker_pen": "Marker Pen"
+    },
+    "watermark": {
+      "title": "Watermark",
+      "sticker": "Sticker"
+    },
+    "sticker": {
+      "title": "Sticker",
+      "promo_shapes": "Promo Shapes",
+      "promo_numbers": "Number Labels",
+      "currency_symbols": "Currency Symbols",
+      "ecommerce": "E-commerce",
+      "no_canvas": "Please open canvas first",
+      "add_failed": "Add failed"
     },
     "app": {
       "title": "App",

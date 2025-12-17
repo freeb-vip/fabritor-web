@@ -95,7 +95,8 @@
       "addSubTitle": "添加副标题",
       "addContent": "添加一段正文",
       "addTextWithBorder": "文字边框",
-      "preset": "默认文字样式"
+      "preset": "默认文字样式",
+      "ecommerce_presets": "电商常用"
     },
     "image": {
       "title": "图片",
@@ -117,7 +118,17 @@
       "marker_pen": "马克笔"
     },
     "watermark": {
-      "title": "水印"
+      "title": "水印",
+      "sticker": "贴图"
+    },
+    "sticker": {
+      "title": "贴图",
+      "promo_shapes": "促销素材",
+      "promo_numbers": "数字标签",
+      "currency_symbols": "货币符号",
+      "ecommerce": "电商贴图",
+      "no_canvas": "请先打开画布",
+      "add_failed": "添加失败"
     },
     "app": {
       "title": "应用",
