@@ -9,6 +9,25 @@ services:
     environment:
       - NODE_ENV=production
     restart: unless-stopped
+    depends_on:
+      - sticker-server
+
+  sticker-server:
+    build: ./sticker-server
+    image: sticker-server:latest
+    ports:
+      - "3002:3001"
+    environment:
+      - NODE_ENV=production
+      - PORT=3001
+      - UPLOAD_DIR=/data/stickers
+    volumes:
+      - sticker-data:/data/stickers
+    restart: unless-stopped
+
+volumes:
+  sticker-data:
+    driver: local
 
   # Optional dev service (uncomment to use)
   # dev:

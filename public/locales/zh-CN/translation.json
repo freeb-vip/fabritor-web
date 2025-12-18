@@ -127,8 +127,16 @@
       "promo_numbers": "数字标签",
       "currency_symbols": "货币符号",
       "ecommerce": "电商贴图",
+      "shared": "共享贴图",
+      "upload": "上传",
       "no_canvas": "请先打开画布",
-      "add_failed": "添加失败"
+      "add_failed": "添加失败",
+      "upload_success": "上传成功",
+      "upload_failed": "上传失败",
+      "delete_success": "删除成功",
+      "delete_failed": "删除失败",
+      "delete_confirm": "确认删除此贴图?",
+      "no_shared": "暂无共享贴图，点击上传添加"
     },
     "app": {
       "title": "应用",
@@ -186,7 +194,9 @@
       "font_styles": "样式",
       "char_spacing": "字间距",
       "line_height": "行间距",
-      "text_background": "文字背景色",
+      "box_background": "文本框背景",
+      "box_border_radius": "圆角",
+      "box_padding": "内边距",
       "fx": {
         "title": "特效",
         "fill_image": "图片填充",

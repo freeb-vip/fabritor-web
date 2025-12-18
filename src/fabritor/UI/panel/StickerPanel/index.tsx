@@ -1,5 +1,6 @@
-import { useContext } from 'react';
-import { Card, Row, Col, message, Divider, Typography } from 'antd';
+import { useContext, useState, useEffect, useRef } from 'react';
+import { Card, Row, Col, message, Divider, Typography, Upload, Button, Spin, Popconfirm, Empty } from 'antd';
+import { UploadOutlined, DeleteOutlined, ReloadOutlined, CloudUploadOutlined } from '@ant-design/icons';
 import { GlobalStateContext } from '@/context';
 import { useTranslation } from '@/i18n/utils';
 import { createImage } from '@/editor/objects/image';
@@ -44,31 +45,7 @@ const ECOMMERCE_STICKERS = [
   { key: 'rocket', emoji: '🚀', label: 'Rocket' },
 ];
 
-// 电商促销素材 - 优惠券/折扣形状，带数字
-const PROMO_SHAPES = [
-  { key: 'discount10', emoji: '🔟', label: '10' },
-  { key: 'discount20', emoji: '2️⃣0️⃣', label: '20' },
-  { key: 'discount30', emoji: '3️⃣0️⃣', label: '30' },
-  { key: 'discount50', emoji: '5️⃣0️⃣', label: '50' },
-  { key: 'num1', emoji: '①', label: '1' },
-  { key: 'num2', emoji: '②', label: '2' },
-  { key: 'num3', emoji: '③', label: '3' },
-  { key: 'num4', emoji: '④', label: '4' },
-  { key: 'num5', emoji: '⑤', label: '5' },
-  { key: 'numCircle1', emoji: '❶', label: '1' },
-  { key: 'numCircle2', emoji: '❷', label: '2' },
-  { key: 'numCircle3', emoji: '❸', label: '3' },
-  { key: 'peso', emoji: '₱', label: 'PHP' },
-  { key: 'baht', emoji: '฿', label: 'THB' },
-  { key: 'ticket', emoji: '🎫', label: 'Ticket' },
-  { key: 'coupon', emoji: '🎟️', label: 'Coupon' },
-  { key: 'bookmark', emoji: '🔖', label: 'Bookmark' },
-  { key: 'label', emoji: '🏷️', label: 'Label' },
-  { key: 'badge', emoji: '📛', label: 'Badge' },
-  { key: 'certified', emoji: '✔️', label: 'Certified' },
-  { key: 'star5', emoji: '★', label: 'Star' },
-  { key: 'starOutline', emoji: '☆', label: 'Star Outline' },
-];
+// 促销素材：按要求不包含任何数字/文字，保留为纯形状/图形
 
 // 颜色配置
 const COLOR_SCHEMES: Record<string, { start: string; end: string; stroke: string }> = {
@@ -110,56 +87,47 @@ const COLORED_CURRENCY_SYMBOLS = [
 ];
 
 // 创建优惠券SVG
-function createCouponSvg(num: string, color: string = 'red'): string {
+function createCouponSvg(color: string = 'red'): string {
   const width = 120;
   const height = 60;
   const scheme = COLOR_SCHEMES[color] || COLOR_SCHEMES.red;
-  const fontSize = num.length > 3 ? 18 : 24;
   const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">
     <defs>
-      <linearGradient id="grad${num.replace(/[^a-zA-Z0-9]/g, '')}" x1="0%" y1="0%" x2="100%" y2="0%">
+      <linearGradient id="grad${color}" x1="0%" y1="0%" x2="100%" y2="0%">
         <stop offset="0%" style="stop-color:${scheme.start};stop-opacity:1" />
         <stop offset="100%" style="stop-color:${scheme.end};stop-opacity:1" />
       </linearGradient>
     </defs>
-    <rect x="2" y="2" width="${width-4}" height="${height-4}" rx="8" ry="8" fill="url(#grad${num.replace(/[^a-zA-Z0-9]/g, '')})" stroke="${scheme.stroke}" stroke-width="2"/>
+    <rect x="2" y="2" width="${width-4}" height="${height-4}" rx="10" ry="10" fill="url(#grad${color})" stroke="${scheme.stroke}" stroke-width="2"/>
     <circle cx="0" cy="${height/2}" r="8" fill="white"/>
     <circle cx="${width}" cy="${height/2}" r="8" fill="white"/>
-    <line x1="${width*0.65}" y1="8" x2="${width*0.65}" y2="${height-8}" stroke="white" stroke-width="2" stroke-dasharray="4,4"/>
-    <text x="${width*0.32}" y="${height*0.65}" font-size="${fontSize}" font-weight="bold" fill="white" text-anchor="middle">${num}</text>
+    <line x1="${width*0.65}" y1="10" x2="${width*0.65}" y2="${height-10}" stroke="white" stroke-width="2" stroke-dasharray="5,5"/>
+    <!-- no text/number by design -->
   </svg>`;
   return 'data:image/svg+xml,' + encodeURIComponent(svg);
 }
 
-// 优惠券SVG形状 - 不含文字，可以显示数字
+// 优惠券SVG形状 - 不含文字/数字
 const COUPON_SHAPES = [
-  // 红色系 - 人民币
-  { key: 'coupon5', svg: createCouponSvg('5', 'red'), label: '5折券' },
-  { key: 'coupon6', svg: createCouponSvg('6', 'red'), label: '6折券' },
-  { key: 'coupon7', svg: createCouponSvg('7', 'red'), label: '7折券' },
-  { key: 'coupon8', svg: createCouponSvg('8', 'red'), label: '8折券' },
-  { key: 'coupon9', svg: createCouponSvg('9', 'red'), label: '9折券' },
-  { key: 'coupon10', svg: createCouponSvg('10', 'red'), label: '10元券' },
-  { key: 'coupon20', svg: createCouponSvg('20', 'red'), label: '20元券' },
-  { key: 'coupon50', svg: createCouponSvg('50', 'red'), label: '50元券' },
-  { key: 'coupon100', svg: createCouponSvg('100', 'red'), label: '100元券' },
-  { key: 'coupon200', svg: createCouponSvg('200', 'red'), label: '200元券' },
-  // 黄色/橙色系 - 菲律宾比索
-  { key: 'couponPhp50', svg: createCouponSvg('₱50', 'yellow'), label: '₱50券' },
-  { key: 'couponPhp100', svg: createCouponSvg('₱100', 'yellow'), label: '₱100券' },
-  { key: 'couponPhp200', svg: createCouponSvg('₱200', 'yellow'), label: '₱200券' },
-  { key: 'couponPhp500', svg: createCouponSvg('₱500', 'yellow'), label: '₱500券' },
-  // 绿色系 - 泰铢
-  { key: 'couponThb50', svg: createCouponSvg('฿50', 'green'), label: '฿50券' },
-  { key: 'couponThb100', svg: createCouponSvg('฿100', 'green'), label: '฿100券' },
-  { key: 'couponThb200', svg: createCouponSvg('฿200', 'green'), label: '฿200券' },
-  { key: 'couponThb500', svg: createCouponSvg('฿500', 'green'), label: '฿500券' },
-  // 橙色系 - 促销
-  { key: 'couponOrange10', svg: createCouponSvg('10%', 'orange'), label: '10%OFF' },
-  { key: 'couponOrange20', svg: createCouponSvg('20%', 'orange'), label: '20%OFF' },
-  { key: 'couponOrange30', svg: createCouponSvg('30%', 'orange'), label: '30%OFF' },
-  { key: 'couponOrange50', svg: createCouponSvg('50%', 'orange'), label: '50%OFF' },
+  // 红 / 黄 / 绿 / 橙 四种促销色
+  { key: 'couponRed', svg: createCouponSvg('red'), label: 'coupon-red' },
+  { key: 'couponYellow', svg: createCouponSvg('yellow'), label: 'coupon-yellow' },
+  { key: 'couponGreen', svg: createCouponSvg('green'), label: 'coupon-green' },
+  { key: 'couponOrange', svg: createCouponSvg('orange'), label: 'coupon-orange' },
 ];
+
+// 贴图服务API地址 - 生产环境使用相对路径，开发时可配置
+const STICKER_API_BASE = 'http://localhost:3002';
+
+// 共享贴图接口类型
+interface SharedSticker {
+  id: string;
+  filename: string;
+  originalName: string;
+  url: string;
+  uploadedAt: string;
+  uploader: string;
+}
 
 // 将 emoji 转换为 SVG 图片 URL
 const emojiToSvgDataUrl = (emoji: string, size = 200): string => {
@@ -170,6 +138,100 @@ const emojiToSvgDataUrl = (emoji: string, size = 200): string => {
 export default function StickerPanel() {
   const { editor } = useContext(GlobalStateContext);
   const { t } = useTranslation();
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  
+  // 共享贴图状态
+  const [sharedStickers, setSharedStickers] = useState<SharedSticker[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [uploading, setUploading] = useState(false);
+
+  // 加载共享贴图列表
+  const fetchSharedStickers = async () => {
+    setLoading(true);
+    try {
+      const res = await fetch(`${STICKER_API_BASE}/api/stickers`);
+      const data = await res.json();
+      if (data.success) {
+        setSharedStickers(data.stickers || []);
+      }
+    } catch (e) {
+      console.error('加载共享贴图失败:', e);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // 初始加载
+  useEffect(() => {
+    fetchSharedStickers();
+  }, []);
+
+  // 上传贴图
+  const handleUpload = async (file: File) => {
+    if (!file) return;
+    
+    setUploading(true);
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('uploader', '团队成员');
+
+      const res = await fetch(`${STICKER_API_BASE}/api/stickers`, {
+        method: 'POST',
+        body: formData
+      });
+      
+      const data = await res.json();
+      if (data.success) {
+        message.success(t('panel.sticker.upload_success') || '上传成功');
+        fetchSharedStickers();
+      } else {
+        message.error(data.error || '上传失败');
+      }
+    } catch (e) {
+      console.error('上传失败:', e);
+      message.error(t('panel.sticker.upload_failed') || '上传失败');
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  // 删除贴图
+  const handleDelete = async (id: string) => {
+    try {
+      const res = await fetch(`${STICKER_API_BASE}/api/stickers/${id}`, {
+        method: 'DELETE'
+      });
+      const data = await res.json();
+      if (data.success) {
+        message.success(t('panel.sticker.delete_success') || '删除成功');
+        fetchSharedStickers();
+      } else {
+        message.error(data.error || '删除失败');
+      }
+    } catch (e) {
+      console.error('删除失败:', e);
+      message.error(t('panel.sticker.delete_failed') || '删除失败');
+    }
+  };
+
+  // 添加共享贴图到画布
+  const handleSharedStickerClick = async (sticker: SharedSticker) => {
+    if (!editor?.canvas) {
+      message.warning(t('panel.sticker.no_canvas') || '请先打开画布');
+      return;
+    }
+    try {
+      const imageUrl = `${STICKER_API_BASE}${sticker.url}`;
+      await createImage({
+        imageSource: imageUrl,
+        canvas: editor.canvas,
+      });
+    } catch (e) {
+      console.error('添加贴图失败:', e);
+      message.error(t('panel.sticker.add_failed') || '添加失败');
+    }
+  };
 
   const handleStickerClick = async (emoji: string) => {
     if (!editor?.canvas) {
@@ -204,8 +266,107 @@ export default function StickerPanel() {
     }
   };
 
+  // 文件选择处理
+  const onFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      handleUpload(file);
+      e.target.value = '';
+    }
+  };
+
   return (
     <div style={{ padding: '16px 16px 16px 0' }}>
+      {/* 共享贴图区域 */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
+        <Title level={5} style={{ margin: 0 }}>{t('panel.sticker.shared') || '共享贴图'}</Title>
+        <div>
+          <Button 
+            size="small" 
+            icon={<ReloadOutlined />} 
+            onClick={fetchSharedStickers}
+            loading={loading}
+            style={{ marginRight: 8 }}
+          />
+          <Button 
+            size="small" 
+            type="primary"
+            icon={<CloudUploadOutlined />} 
+            onClick={() => fileInputRef.current?.click()}
+            loading={uploading}
+          >
+            {t('panel.sticker.upload') || '上传'}
+          </Button>
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/*"
+            style={{ display: 'none' }}
+            onChange={onFileSelect}
+          />
+        </div>
+      </div>
+      
+      {loading ? (
+        <div style={{ textAlign: 'center', padding: 20 }}>
+          <Spin />
+        </div>
+      ) : sharedStickers.length === 0 ? (
+        <Empty 
+          description={t('panel.sticker.no_shared') || '暂无共享贴图'} 
+          image={Empty.PRESENTED_IMAGE_SIMPLE}
+          style={{ margin: '16px 0' }}
+        />
+      ) : (
+        <Row gutter={[8, 8]}>
+          {sharedStickers.map((sticker) => (
+            <Col span={8} key={sticker.id}>
+              <Card
+                hoverable
+                size="small"
+                style={{ textAlign: 'center', cursor: 'pointer', padding: 0, position: 'relative' }}
+                bodyStyle={{ padding: '4px' }}
+                onClick={() => handleSharedStickerClick(sticker)}
+              >
+                <img 
+                  src={`${STICKER_API_BASE}${sticker.url}`} 
+                  alt={sticker.originalName} 
+                  style={{ width: '100%', height: 50, objectFit: 'contain' }} 
+                />
+                <Popconfirm
+                  title={t('panel.sticker.delete_confirm') || '确认删除?'}
+                  onConfirm={(e) => {
+                    e?.stopPropagation();
+                    handleDelete(sticker.id);
+                  }}
+                  onCancel={(e) => e?.stopPropagation()}
+                >
+                  <Button
+                    size="small"
+                    type="text"
+                    danger
+                    icon={<DeleteOutlined />}
+                    style={{ 
+                      position: 'absolute', 
+                      top: 2, 
+                      right: 2,
+                      padding: 0,
+                      width: 20,
+                      height: 20,
+                      minWidth: 20,
+                      fontSize: 12
+                    }}
+                    onClick={(e) => e.stopPropagation()}
+                  />
+                </Popconfirm>
+              </Card>
+            </Col>
+          ))}
+        </Row>
+      )}
+
+      <Divider style={{ margin: '16px 0' }} />
+
       <Title level={5} style={{ marginBottom: 12 }}>{t('panel.sticker.promo_shapes') || '促销素材'}</Title>
       <Row gutter={[8, 8]}>
         {COUPON_SHAPES.map((item) => (
@@ -218,25 +379,6 @@ export default function StickerPanel() {
               onClick={() => handleCouponClick(item.svg)}
             >
               <img src={item.svg} alt={item.label} style={{ width: '100%', height: 40, objectFit: 'contain' }} />
-            </Card>
-          </Col>
-        ))}
-      </Row>
-
-      <Divider style={{ margin: '16px 0' }} />
-
-      <Title level={5} style={{ marginBottom: 12 }}>{t('panel.sticker.promo_numbers') || '数字标签'}</Title>
-      <Row gutter={[8, 8]}>
-        {PROMO_SHAPES.map((sticker) => (
-          <Col span={6} key={sticker.key}>
-            <Card
-              hoverable
-              size="small"
-              style={{ textAlign: 'center', cursor: 'pointer', padding: 0 }}
-              bodyStyle={{ padding: '6px 0' }}
-              onClick={() => handleStickerClick(sticker.emoji)}
-            >
-              <span style={{ fontSize: 24 }}>{sticker.emoji}</span>
             </Card>
           </Col>
         ))}

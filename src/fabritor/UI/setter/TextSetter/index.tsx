@@ -76,15 +76,15 @@ export default function TextSetter () {
         }
       } else if (key === 'fill') {
         handleFill(values[key]);
-      } else if (key === 'textBackgroundColor') {
-        // 处理文字背景颜色
+      } else if (key === 'boxBackgroundColor') {
+        // 处理文本框背景颜色
         let bgColor = '';
         if (typeof values[key] === 'string') {
           bgColor = values[key];
         } else if (values[key]?.color) {
           bgColor = values[key].color;
         }
-        object.set('textBackgroundColor', bgColor);
+        object.set('boxBackgroundColor', bgColor);
       } else {
         const selectedText = object.getSelectedText();
         if (selectedText && key === 'fill') {
@@ -111,7 +111,9 @@ export default function TextSetter () {
       textAlign: object.textAlign,
       lineHeight: object.lineHeight,
       charSpacing: object.charSpacing,
-      textBackgroundColor: object.textBackgroundColor ? { type: 'solid', color: object.textBackgroundColor } : { type: 'solid', color: 'transparent' },
+      boxBackgroundColor: object.boxBackgroundColor ? { type: 'solid', color: object.boxBackgroundColor } : { type: 'solid', color: 'transparent' },
+      boxBorderRadius: object.boxBorderRadius || 0,
+      boxPadding: object.boxPadding || 0,
       fontStyles: {
         bold: object.fontWeight === 'bold',
         italic: object.fontStyle === 'italic',
@@ -161,10 +163,30 @@ export default function TextSetter () {
           <FontStyleSetter />
         </FormItem>
         <FormItem
-          name="textBackgroundColor"
-          label={t('setter.text.text_background')}
+          name="boxBackgroundColor"
+          label={t('setter.text.box_background')}
         >
           <ColorSetter type="backgroundColor" defaultColor="transparent" />
+        </FormItem>
+        <FormItem
+          name="boxBorderRadius"
+          label={t('setter.text.box_border_radius')}
+        >
+          <SliderInputNumber
+            min={0}
+            max={100}
+            onChangeComplete={() =>{ editor.fireCustomModifiedEvent() }}
+          />
+        </FormItem>
+        <FormItem
+          name="boxPadding"
+          label={t('setter.text.box_padding')}
+        >
+          <SliderInputNumber
+            min={0}
+            max={100}
+            onChangeComplete={() =>{ editor.fireCustomModifiedEvent() }}
+          />
         </FormItem>
         <FormItem
           name="charSpacing"

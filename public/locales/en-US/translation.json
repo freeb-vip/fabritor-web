@@ -127,8 +127,16 @@
       "promo_numbers": "Number Labels",
       "currency_symbols": "Currency Symbols",
       "ecommerce": "E-commerce",
+      "shared": "Shared Stickers",
+      "upload": "Upload",
       "no_canvas": "Please open canvas first",
-      "add_failed": "Add failed"
+      "add_failed": "Add failed",
+      "upload_success": "Upload successful",
+      "upload_failed": "Upload failed",
+      "delete_success": "Deleted successfully",
+      "delete_failed": "Delete failed",
+      "delete_confirm": "Confirm delete this sticker?",
+      "no_shared": "No shared stickers yet, click upload to add"
     },
     "app": {
       "title": "App",
@@ -170,7 +178,9 @@
       "font_styles": "Style",
       "char_spacing": "Char Space",
       "line_height": "Line Height",
-      "text_background": "Text Background",
+      "box_background": "Box Background",
+      "box_border_radius": "Border Radius",
+      "box_padding": "Padding",
       "fx": {
         "title": "Effects",
         "fill_image": "Fill Image",
